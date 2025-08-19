@@ -8,8 +8,8 @@ on:
       - develop
       - 'release/*'
 
-env:
-  JFROG_CLI_AVOID_NEW_VERSION_WARNING: 'true'
+#env:
+#  JFROG_CLI_AVOID_NEW_VERSION_WARNING: 'true'
   
 permissions:
   actions: read           # for detecting the Github Actions environment
@@ -38,6 +38,7 @@ jobs:
           JF_PROJECT: ${{ vars.JF_PROJECT }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+            version: '2.77.0'
             oidc-provider-name: setup-jfrog-cli
             oidc-audience: jfrog-github
           
