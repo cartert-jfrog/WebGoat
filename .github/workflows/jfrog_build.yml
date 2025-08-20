@@ -46,23 +46,6 @@ jobs:
         id: deploy
         run: |
           jf mvn-config --repo-resolve-releases webgoat-dev-libs-release --repo-resolve-snapshots webgoat-dev-libs-snapshot --repo-deploy-releases webgoat-dev-libs-release --repo-deploy-snapshots webgoat-dev-libs-snapshot
-          
-          # Run curation audit and capture output
-          # audit_output=$(jf ca 2>&1)
-          # echo "$audit_output"
-          
-          # Check if blocked packages were found
-          # if echo "$audit_output" | grep -q "Found [1-9][0-9]* blocked packages"; then
-          # echo "::error::Curation audit detected blocked packages - failing build"
-          # echo "curation_failed=true" >> $GITHUB_OUTPUT
-          #  exit 1
-          # fi
-          
-          jf mvn clean deploy -DskipTests 
-
-      - name: Publish Build Info
-        #if: steps.deploy.outputs.curation_failed != 'true'
-        run: |
           jf rt build-collect-env
           jf rt build-add-git
           jf rt build-publish
