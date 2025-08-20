@@ -45,7 +45,7 @@ jobs:
       - name: Deploy with Maven
         id: deploy
         run: |
-          jf mvn-config --repo-resolve-releases spc-dev-libs-release --repo-resolve-snapshots spc-dev-libs-snapshot --repo-deploy-releases spc-dev-libs-release --repo-deploy-snapshots spc-dev-libs-snapshot
+          jf mvn-config --repo-resolve-releases webgoat-dev-libs-release --repo-resolve-snapshots webgoat-dev-libs-snapshot --repo-deploy-releases webgoat-dev-libs-release --repo-deploy-snapshots webgoat-dev-libs-snapshot
           
           # Run curation audit and capture output
           audit_output=$(jf ca 2>&1)
