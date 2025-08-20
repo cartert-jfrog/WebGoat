@@ -3,10 +3,18 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
+    <groupId>com.mayhoo</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.3.4</version>
+  </parent>
+  
+  <!--
+  <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.4.4</version>
   </parent>
+  -->
 
   <groupId>org.owasp.webgoat</groupId>
   <artifactId>webgoat</artifactId>
