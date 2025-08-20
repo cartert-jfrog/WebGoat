@@ -46,6 +46,7 @@ jobs:
         id: deploy
         run: |
           jf mvn-config --repo-resolve-releases webgoat-dev-libs-release --repo-resolve-snapshots webgoat-dev-libs-snapshot --repo-deploy-releases webgoat-dev-libs-release --repo-deploy-snapshots webgoat-dev-libs-snapshot
+          jf mvn clean deploy -DskipTests
           jf rt build-collect-env
           jf rt build-add-git
           jf rt build-publish
