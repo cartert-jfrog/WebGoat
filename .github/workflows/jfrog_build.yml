@@ -61,14 +61,14 @@ jobs:
           jf mvn clean deploy -DskipTests 
 
       - name: Publish Build Info
-        if: steps.deploy.outputs.curation_failed != 'true'
+        #if: steps.deploy.outputs.curation_failed != 'true'
         run: |
           jf rt build-collect-env
           jf rt build-add-git
           jf rt build-publish
 
       - name: JFrog Frogbot Repository Scan
-        if: steps.deploy.outputs.curation_failed != 'true'
+        #if: steps.deploy.outputs.curation_failed != 'true'
         uses: jfrog/frogbot@v2
         with:
           oidc-provider-name: setup-jfrog-cli
