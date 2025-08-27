@@ -45,7 +45,8 @@ jobs:
       - name: Deploy with Maven
         id: deploy
         run: |
-          jf mvn -m settings.xml clean deploy -DskipTests
+          jf mvn-config --repo-resolve-releases webgoat-libs-release --repo-resolve-snapshots webgoat-libs-snapshot --repo-deploy-releases webgoat-libs-release --repo-deploy-snapshots webgoat-libs-snapshot
+          jf mvn clean deploy -DskipTests
           jf rt build-collect-env
           jf rt build-add-git
           jf rt build-publish
