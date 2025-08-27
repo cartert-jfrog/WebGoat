@@ -1,4 +1,4 @@
-name: Jfrog Build
+name: Jfrog Build & Scan
 
 on:
   workflow_dispatch: # The repository will be scanned on demand
@@ -38,7 +38,7 @@ jobs:
           JF_PROJECT: ${{ vars.JF_PROJECT }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-            version: '2.77.0'
+            version: '2.78.7'
             oidc-provider-name: setup-jfrog-cli
             oidc-audience: jfrog-github
           
