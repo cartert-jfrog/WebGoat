@@ -840,4 +840,13 @@
       </build>
     </profile>
   </profiles>
+    
+  <distributionManagement>
+      <snapshotRepository>
+          <id>snapshots</id>
+          <name>cartert-webgoat-libs-snapshot-snapshots</name>
+          <url>https://cartert.jfrog.io/artifactory/webgoat-libs-snapshot</url>
+      </snapshotRepository>
+  </distributionManagement>
+    
 </project>
