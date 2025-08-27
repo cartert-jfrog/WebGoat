@@ -19,7 +19,7 @@
 mongo-data/*
 .classpath
 .idea/
-.settings.xml
+settings.xml
 .settings/
 src/main/main.iml
 *.BACKUP.*.jsp
