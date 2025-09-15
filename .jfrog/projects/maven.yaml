@@ -1,0 +1,10 @@
+version: 1
+type: maven
+resolver:
+    serverId: cartert.jfrog.io server
+    snapshotRepo: webgoat-libs-snapshot
+    releaseRepo: webgoat-libs-release
+deployer:
+    serverId: cartert.jfrog.io server
+    snapshotRepo: webgoat-libs-snapshot
+    releaseRepo: webgoat-libs-release
