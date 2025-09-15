@@ -1,6 +1,7 @@
 resource "aws_instance" "example_instance" {
   ami           = "ami-0abcdef1234567890" # Not a real AMI ID
   instance_type = "t2.micro"
+  token         = "ghp_asdj123klaslk123lk22l" # Made up resource
   tags = {
     Name = "Deliberate Bad Example"
   }
