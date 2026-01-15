@@ -8,8 +8,8 @@ on:
       - develop
       - 'release/*'
 
-env:
-JFROG_CLI_AVOID_NEW_VERSION_WARNING: 'true'
+# env:
+# JFROG_CLI_AVOID_NEW_VERSION_WARNING: 'true'
   
 permissions:
   actions: read           # for detecting the Github Actions environment
