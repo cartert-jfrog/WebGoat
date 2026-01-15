@@ -50,12 +50,18 @@ jobs:
       # Add before the deploy step, right after setup-java
       - name: Check Maven Version
         run: mvn -version
-        
+
+      - name: Verify JFrog CLI & Artifactory auth
+        run: |
+          jf --version
+          jf rt config show || true
+          
       - name: Deploy with Maven
         id: deploy
         run: |
-          jf mvn-config --repo-resolve-releases webgoat-libs-release --repo-resolve-snapshots webgoat-libs-snapshot --repo-deploy-releases webgoat-libs-release --repo-deploy-snapshots webgoat-libs-snapshot
-          jf mvn clean package -DskipTests
+          jf rt ping || true
+          jf rt mvn-config --repo-resolve-releases webgoat-libs-release --repo-resolve-snapshots webgoat-libs-snapshot --repo-deploy-releases webgoat-libs-release --repo-deploy-snapshots webgoat-libs-snapshot
+          jf rt mvn clean package -DskipTests
           jf rt build-collect-env
           jf rt build-add-git
           jf rt build-publish
