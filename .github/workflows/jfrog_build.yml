@@ -41,7 +41,10 @@ jobs:
             version: '2.78.7'
             oidc-provider-name: setup-jfrog-cli
             oidc-audience: jfrog-github
-          
+      # Add before the deploy step, right after setup-java
+      - name: Check Maven Version
+        run: mvn -version
+        
       - name: Deploy with Maven
         id: deploy
         run: |
