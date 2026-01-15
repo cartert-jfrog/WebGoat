@@ -40,7 +40,7 @@ jobs:
         id: setup-cli
         env:
           JF_URL: ${{ vars.JF_URL }}
-          JF_PROJECT: ${{ vars.JF_PROJECT 
+          JF_PROJECT: ${{ vars.JF_PROJECT }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
             version: '2.88.0'
