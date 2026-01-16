@@ -61,7 +61,7 @@ jobs:
         run: |
           jf rt ping || true
           jf mvn-config --repo-resolve-releases webgoat-libs-release --repo-resolve-snapshots webgoat-libs-snapshot --repo-deploy-releases webgoat-libs-release --repo-deploy-snapshots webgoat-libs-snapshot
-          jf mvn clean package -DskipTests -X
+          jf mvn clean package -DskipTests
           jf rt build-collect-env
           jf rt build-add-git
           jf rt build-publish
