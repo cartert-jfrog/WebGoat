@@ -54,7 +54,7 @@ jobs:
       - name: Verify JFrog CLI & Artifactory auth
         run: |
           jf --version
-          jf rt config show || true
+          jf config show
           
       - name: Deploy with Maven
         id: deploy
