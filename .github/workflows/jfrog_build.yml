@@ -47,7 +47,7 @@ jobs:
           JF_PROJECT: ${{ vars.JF_PROJECT }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-            version: '2.88.0'
+            #version: '2.88.0'
             oidc-provider-name: setup-jfrog-cli
             oidc-audience: jfrog-github
 
