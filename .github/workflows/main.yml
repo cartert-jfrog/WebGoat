@@ -20,6 +20,7 @@ jobs:
         with:
           # Name of the OIDC provider as specified on the OIDC integration page in the JFrog Platform
           oidc-provider-name: webgoat-jfrog-cli
+          oidc-audience: webgoat-jfrog-cli
 
       - name: Run JFrog CLI
         run: |
