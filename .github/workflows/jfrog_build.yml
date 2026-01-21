@@ -34,7 +34,11 @@ jobs:
         run: | 
           sudo apt-get update 
           sudo apt-get install -y maven
-
+          
+      # Add before the deploy step, right after setup-java
+      - name: Check Maven Version
+        run: mvn -version
+        
       - name: Setup JFrog CLI 
         uses: jfrog/setup-jfrog-cli@v4
         id: setup-cli
@@ -46,10 +50,26 @@ jobs:
             version: '2.88.0'
             oidc-provider-name: setup-jfrog-cli
             oidc-audience: jfrog-github
-      
-      # Add before the deploy step, right after setup-java
-      - name: Check Maven Version
-        run: mvn -version
+
+      # OIDC Debugger
+      - name: 'oidc-debugger-action'
+        description: 'Print decoded OIDC token claims generated through Github Actions.'
+        inputs:
+          audience:
+          description: 'The audience to use when requesting the JWT. Your Github server URL and repository owner (e.g. https://github.com/github).'
+          required: true
+          default: '${{ github.server_url }}/${{ github.repository }}'
+      runs:
+        using: "composite"
+        steps:
+          - name: Debug OIDC claims
+            shell: bash
+            env:
+              AUDIENCE: "${{ inputs.audience }}"
+            run: |
+              TOKEN_JSON=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=$AUDIENCE")
+              ID_TOKEN=$(echo "$TOKEN_JSON" | jq -r .value)
+              echo "$ID_TOKEN" | awk -F. '{print $2}' | base64 -d 2>/dev/null | jq -r
 
       - name: Verify JFrog CLI & Artifactory auth
         run: |
