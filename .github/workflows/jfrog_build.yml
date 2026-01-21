@@ -71,7 +71,11 @@ jobs:
             echo "✗ Failed to obtain OIDC token"
             echo "Response: $TOKEN_JSON"
           fi
-
+          
+      - name: Test Calling Artifactory with ID_TOKEN
+        run: |
+          echo "$ID_TOKEN" | head -c 200 curl -s -I -H "Authorization: Bearer $ID_TOKEN" "$JF_URL/artifactory/api/system/ping" -o /dev/null -w "%{http_code}\n"
+      
       - name: Verify JFrog CLI & Artifactory auth
         run: |
           export JFROG_CLI_LOG_LEVEL=DEBUG
