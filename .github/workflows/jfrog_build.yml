@@ -8,16 +8,6 @@ on:
       - develop
       - 'release/*'
 
-# env:
-# JFROG_CLI_AVOID_NEW_VERSION_WARNING: 'true'
-  
-permissions:
-  actions: read           # for detecting the Github Actions environment
-  id-token: write         # for creating OIDC tokens for signing
-  contents: write         # for creating fixing pull requests and pushing changes
-  pull-requests: write    # for creating pull requests to fix vulnerabilities
-  security-events: write  # for uploading SARIF results to GitHub Code Scanning
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -46,35 +36,10 @@ jobs:
           JF_URL: ${{ vars.JF_URL }}
           JF_PROJECT: ${{ vars.JF_PROJECT }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-            #version: '2.88.0'
-            oidc-provider-name: setup-jfrog-cli
-            oidc-audience: jfrog-github
+		  JF_ACCESS_TOKEN: ${{JF_API_KEY}}
 
-      # OIDC Debugger - Debug OIDC token claims
-      - name: Debug OIDC Token Claims
         run: |
-          echo "=== Debugging OIDC Token ==="
-          echo "OIDC Request URL: $ACTIONS_ID_TOKEN_REQUEST_URL"
-          echo "Repository: ${{ github.repository }}"
-          echo "Server URL: ${{ github.server_url }}"
-          
-          # Request OIDC token with jfrog-github audience
-          TOKEN_JSON=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=jfrog-github")
-          ID_TOKEN=$(echo "$TOKEN_JSON" | jq -r .value)
-          
-          if [ "$ID_TOKEN" != "null" ] && [ -n "$ID_TOKEN" ]; then
-            echo "✓ OIDC Token obtained successfully"
-            echo "Decoded token claims:"
-            echo "$ID_TOKEN" | awk -F. '{print $2}' | base64 -d 2>/dev/null | jq -r '.'
-          else
-            echo "✗ Failed to obtain OIDC token"
-            echo "Response: $TOKEN_JSON"
-          fi
-          
-      - name: Test Calling Artifactory with ID_TOKEN
-        run: |
-          echo "$ID_TOKEN" | head -c 200 
+          echo "$JF_API_KEY" | head -c 200 
           curl -s -I -H "Authorization: Bearer $ID_TOKEN" "$JF_URL/artifactory/api/system/ping" -o /dev/null -w "%{http_code}\n"
       
       - name: Verify JFrog CLI & Artifactory auth
@@ -96,13 +61,11 @@ jobs:
       - name: JFrog Frogbot Repository Scan
         uses: jfrog/frogbot@v2
         id: frogbot
-        with:
-          oidc-provider-name: setup-jfrog-cli
-          oidc-audience: jfrog-github
         env:
           JF_URL: ${{ vars.JF_URL }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JF_PROJECT: ${{ vars.JF_PROJECT }}
+		  JF_ACCESS_TOKEN: ${{JF_API_KEY}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JF_MIN_SEVERITY: "High"
           
