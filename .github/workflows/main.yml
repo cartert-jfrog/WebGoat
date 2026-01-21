@@ -1,17 +1,36 @@
 name: "WebGoat Build GH Actions"
-on: push
 
+on:
+  workflow_dispatch: # The repository will be scanned on demand
+  push:
+    branches:
+      - main
+      - develop
+      - 'release/*'
+      
 permissions:
-  # This is required for requesting the OIDC token
-  id-token: write
-  # This is required for actions/checkout
-  contents: read
+  actions: read           # for detecting the Github Actions environment
+  id-token: write         # for creating OIDC tokens for signing
+  contents: write         # for creating fixing pull requests and pushing changes
+  pull-requests: write    # for creating pull requests to fix vulnerabilities
+  security-events: write  # for uploading SARIF results to GitHub Code Scanning
+  
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - name: Install Maven
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y maven
       - name: Setup JFrog CLI
         uses: jfrog/setup-jfrog-cli@v4
         env:
@@ -21,14 +40,19 @@ jobs:
           # Name of the OIDC provider as specified on the OIDC integration page in the JFrog Platform
           oidc-provider-name: webgoat-jfrog-cli
           oidc-audience: webgoat-jfrog-cli
-
-      - name: Run JFrog CLI
+      
+      - name: Verify JFrog CLI & Artifactory Auth
         run: |
-          # Ping the server
+          export JFROG_CLI_LOG_LEVEL=DEBUG
+          jf --version
+          jf config show
+
+      - name: Deploy with Maven
+        id: deploy
+        run: |
           jf rt ping
-          # Collect environment variables for the build
-          jf rt bce
-          # Collect VCS details from git and add them to the build
-          jf rt bag
-          # Publish build info
-          jf rt bp
+          jf mvn-config --repo-resolve-releases webgoat-libs-release --repo-resolve-snapshots webgoat-libs-snapshot --repo-deploy-releases webgoat-libs-release --repo-deploy-snapshots webgoat-libs-snapshot
+          jf mvn -Dmaven.test.skip=true clean install
+          jf rt build-collect-env
+          jf rt build-add-git
+          jf rt build-publish
