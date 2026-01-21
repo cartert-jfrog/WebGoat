@@ -19,35 +19,31 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
-          
-      - name: Install Maven 
-        run: | 
-          sudo apt-get update 
+
+      - name: Install Maven
+        run: |
+          sudo apt-get update
           sudo apt-get install -y maven
-          
+
       # Add before the deploy step, right after setup-java
       - name: Check Maven Version
         run: mvn -version
-        
-      - name: Setup JFrog CLI 
+
+      - name: Setup JFrog CLI
         uses: jfrog/setup-jfrog-cli@v4
         id: setup-cli
         env:
           JF_URL: ${{ vars.JF_URL }}
           JF_PROJECT: ${{ vars.JF_PROJECT }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-		  JF_ACCESS_TOKEN: ${{JF_API_KEY}}
+          JF_ACCESS_TOKEN: ${{JF_API_KEY}}
 
-        run: |
-          echo "$JF_API_KEY" | head -c 200 
-          curl -s -I -H "Authorization: Bearer $ID_TOKEN" "$JF_URL/artifactory/api/system/ping" -o /dev/null -w "%{http_code}\n"
-      
       - name: Verify JFrog CLI & Artifactory auth
         run: |
           export JFROG_CLI_LOG_LEVEL=DEBUG
           jf --version
           jf config show
-          
+
       - name: Deploy with Maven
         id: deploy
         run: |
@@ -61,11 +57,13 @@ jobs:
       - name: JFrog Frogbot Repository Scan
         uses: jfrog/frogbot@v2
         id: frogbot
+        with:
+          oidc-provider-name: setup-jfrog-cli
+          oidc-audience: jfrog-github
         env:
           JF_URL: ${{ vars.JF_URL }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JF_PROJECT: ${{ vars.JF_PROJECT }}
-		  JF_ACCESS_TOKEN: ${{JF_API_KEY}}
+          JF_ACCESS_TOKEN: ${{JF_API_KEY}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JF_MIN_SEVERITY: "High"
-          
