@@ -51,25 +51,26 @@ jobs:
             oidc-provider-name: setup-jfrog-cli
             oidc-audience: jfrog-github
 
-      # OIDC Debugger
-      - name: 'oidc-debugger-action'
-        description: 'Print decoded OIDC token claims generated through Github Actions.'
-        inputs:
-          audience:
-          description: 'The audience to use when requesting the JWT. Your Github server URL and repository owner (e.g. https://github.com/github).'
-          required: true
-          default: '${{ github.server_url }}/${{ github.repository }}'
-      runs:
-        using: "composite"
-        steps:
-          - name: Debug OIDC claims
-            shell: bash
-            env:
-              AUDIENCE: "${{ inputs.audience }}"
-            run: |
-              TOKEN_JSON=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=$AUDIENCE")
-              ID_TOKEN=$(echo "$TOKEN_JSON" | jq -r .value)
-              echo "$ID_TOKEN" | awk -F. '{print $2}' | base64 -d 2>/dev/null | jq -r
+      # OIDC Debugger - Debug OIDC token claims
+      - name: Debug OIDC Token Claims
+        run: |
+          echo "=== Debugging OIDC Token ==="
+          echo "OIDC Request URL: $ACTIONS_ID_TOKEN_REQUEST_URL"
+          echo "Repository: ${{ github.repository }}"
+          echo "Server URL: ${{ github.server_url }}"
+          
+          # Request OIDC token with jfrog-github audience
+          TOKEN_JSON=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=jfrog-github")
+          ID_TOKEN=$(echo "$TOKEN_JSON" | jq -r .value)
+          
+          if [ "$ID_TOKEN" != "null" ] && [ -n "$ID_TOKEN" ]; then
+            echo "✓ OIDC Token obtained successfully"
+            echo "Decoded token claims:"
+            echo "$ID_TOKEN" | awk -F. '{print $2}' | base64 -d 2>/dev/null | jq -r '.'
+          else
+            echo "✗ Failed to obtain OIDC token"
+            echo "Response: $TOKEN_JSON"
+          fi
 
       - name: Verify JFrog CLI & Artifactory auth
         run: |
