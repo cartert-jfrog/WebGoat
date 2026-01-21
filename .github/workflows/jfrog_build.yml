@@ -36,7 +36,7 @@ jobs:
           JF_URL: ${{ vars.JF_URL }}
           JF_PROJECT: ${{ vars.JF_PROJECT }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          JF_ACCESS_TOKEN: ${{JF_API_KEY}}
+          JF_ACCESS_TOKEN: ${{JF_ACCESS_TOKEN}}
 
       - name: Verify JFrog CLI & Artifactory auth
         run: |
@@ -64,6 +64,6 @@ jobs:
           JF_URL: ${{ vars.JF_URL }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JF_PROJECT: ${{ vars.JF_PROJECT }}
-          JF_ACCESS_TOKEN: ${{JF_API_KEY}}
+          JF_ACCESS_TOKEN: ${{JF_ACCESS_TOKEN}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JF_MIN_SEVERITY: "High"
