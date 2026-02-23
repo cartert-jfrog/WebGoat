@@ -60,6 +60,14 @@
     <url>https://github.com/WebGoat/WebGoat/issues</url>
   </issueManagement>
 
+  <distributionManagement>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>cartert-webgoat-libs-snapshot-snapshots</name>
+      <url>https://cartert.jfrog.io/artifactory/webgoat-libs-snapshot</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <properties>
     <!-- Shared properties with plugins and version numbers across submodules-->
     <asciidoctorj.version>3.0.0</asciidoctorj.version>
@@ -110,7 +118,8 @@
     <webwolf.port>9090</webwolf.port>
     <wiremock.version>3.13.0</wiremock.version>
     <xml-resolver.version>1.2</xml-resolver.version>
-    <xstream.version>1.4.5</xstream.version>
+    <!-- Updated XStream to a secure version to enable safe-deserialization APIs -->
+    <xstream.version>1.4.20</xstream.version>
     <!-- do not update necessary for lesson -->
     <zxcvbn.version>1.9.0</zxcvbn.version>
   </properties>
@@ -840,13 +849,5 @@
       </build>
     </profile>
   </profiles>
-    
-  <distributionManagement>
-      <snapshotRepository>
-          <id>snapshots</id>
-          <name>cartert-webgoat-libs-snapshot-snapshots</name>
-          <url>https://cartert.jfrog.io/artifactory/webgoat-libs-snapshot</url>
-      </snapshotRepository>
-  </distributionManagement>
-    
+
 </project>
