@@ -7,7 +7,14 @@ on:
       - main
       - develop
       - 'release/*'
-
+      
+permissions:
+  actions: read           # for detecting the Github Actions environment
+  id-token: write         # for creating OIDC tokens for signing
+  contents: write         # for creating fixing pull requests and pushing changes
+  pull-requests: write    # for creating pull requests to fix vulnerabilities
+  security-events: write  # for uploading SARIF results to GitHub Code Scanning
+  
 jobs:
   build:
     runs-on: ubuntu-latest
