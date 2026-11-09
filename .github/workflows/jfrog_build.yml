@@ -67,6 +67,23 @@ jobs:
           jf rt build-add-git
           jf rt build-publish
 
+      - name: Create Build Evidence
+        env:
+          ACTOR: ${{ github.actor }}
+          COMMIT_SHA: ${{ github.sha }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        run: |
+          jq -n --arg actor "$ACTOR" --arg commit "$COMMIT_SHA" \
+            '{actor: $actor, commit: $commit}' > predicate.json
+          jf evd create \
+            --project="$JFROG_CLI_BUILD_PROJECT" \
+            --build-name="$JFROG_CLI_BUILD_NAME" \
+            --build-number="$JFROG_CLI_BUILD_NUMBER" \
+            --predicate=./predicate.json \
+            --predicate-type=https://jfrog.com/evidence/build-signature/v1 \
+            --key="$PRIVATE_KEY" \
+            --key-alias=webgoat-cicd-evidence
+
       - name: JFrog Frogbot Repository Scan
         uses: jfrog/frogbot@v2
         id: frogbot
