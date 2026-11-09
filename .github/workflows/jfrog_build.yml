@@ -47,7 +47,9 @@ jobs:
           JF_URL: ${{ vars.JF_URL }}
           JF_PROJECT: ${{ vars.JF_PROJECT }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          JF_ACCESS_TOKEN: ${{secrets.JF_ACCESS_TOKEN}}
+        with:
+          oidc-provider-name: webgoat-jfrog-cli
+          oidc-audience: webgoat-jfrog-cli
 
       - name: Verify JFrog CLI & Artifactory auth
         run: |
@@ -69,12 +71,11 @@ jobs:
         uses: jfrog/frogbot@v2
         id: frogbot
         with:
-          oidc-provider-name: setup-jfrog-cli
-          oidc-audience: jfrog-github
+          oidc-provider-name: webgoat-jfrog-cli
+          oidc-audience: webgoat-jfrog-cli
         env:
           JF_URL: ${{ vars.JF_URL }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JF_PROJECT: ${{ vars.JF_PROJECT }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          JF_ACCESS_TOKEN: ${{secrets.JF_ACCESS_TOKEN}}
           JF_MIN_SEVERITY: "High"
